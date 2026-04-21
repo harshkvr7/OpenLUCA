@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxonomy Explorer [MONOCHROME]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind to strictly use BW palette
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#000000',      // Pure Black
+                            panel: '#000000',   // Pure Black panels
+                            text: '#FFFFFF',    // Pure White text
+                            subtle: '#A1A1AA',  // Zinc-400 for labels
+                            border: '#FFFFFF',  // White borders
+                            action: '#FFFFFF',  // White buttons
+                            actionText: '#000000' // Black text on white buttons
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Strict monochrome scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #FFFFFF;
+            border-radius: 0px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #A1A1AA;
+        }
+
+        /* Remove input number spinners for cleaner look */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+
+<body class="bg-brand-bg text-brand-text font-sans min-h-screen p-8">
+
+    <div class="max-w-4xl mx-auto space-y-12">
+
+        <header class="border-b-2 border-brand-border pb-6">
+            <h1 class="text-5xl font-extrabold tracking-tighter text-brand-text">Taxonomy<span
+                    class="font-light">Explorer</span></h1>
+            <p class="text-brand-subtle mt-2 text-lg uppercase tracking-widest">API Interface</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <div class="bg-brand-panel p-6 rounded-none border-2 border-brand-border">
+                <h2 class="text-2xl font-bold mb-6 text-brand-text uppercase tracking-tight">Find Lineage</h2>
+                <form id="lineage-form" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-brand-subtle mb-1 uppercase">Target Tax ID</label>
+                        <input type="number" id="lineage-id" placeholder="e.g., 9606" required
+                            class="w-full bg-brand-bg border-2 border-brand-border rounded-none px-4 py-3 text-brand-text text-lg focus:outline-none focus:ring-2 focus:ring-white">
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-brand-action hover:bg-brand-subtle text-brand-actionText font-bold text-lg uppercase py-3 px-4 rounded-none transition-colors duration-150">
+                        Get Lineage
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-brand-panel p-6 rounded-none border-2 border-brand-border">
+                <h2 class="text-2xl font-bold mb-6 text-brand-text uppercase tracking-tight">Find LCA</h2>
+                <form id="lca-form" class="space-y-5">
+                    <div class="flex space-x-4">
+                        <div class="w-1/2">
+                            <label class="block text-sm font-medium text-brand-subtle mb-1 uppercase">Tax ID 1</label>
+                            <input type="number" id="lca-id1" placeholder="9606" required
+                                class="w-full bg-brand-bg border-2 border-brand-border rounded-none px-4 py-3 text-brand-text text-lg focus:outline-none focus:ring-2 focus:ring-white">
+                        </div>
+                        <div class="w-1/2">
+                            <label class="block text-sm font-medium text-brand-subtle mb-1 uppercase">Tax ID 2</label>
+                            <input type="number" id="lca-id2" placeholder="9615" required
+                                class="w-full bg-brand-bg border-2 border-brand-border rounded-none px-4 py-3 text-brand-text text-lg focus:outline-none focus:ring-2 focus:ring-white">
+                        </div>
+                    </div>
+
+                    <div class="border border-brand-border p-3 flex space-x-6">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="algorithm" value="binary_lifting" checked
+                                class="form-radio text-brand-text bg-brand-bg border-brand-border">
+                            <span class="text-sm font-mono uppercase">O(log H) Binary Lifting</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="algorithm" value="naive"
+                                class="form-radio text-brand-text bg-brand-bg border-brand-border">
+                            <span class="text-sm font-mono uppercase">O(H) Naive Intersect</span>
+                        </label>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-brand-action hover:bg-brand-subtle text-brand-actionText font-bold text-lg uppercase py-3 px-4 rounded-none transition-colors duration-150">
+                        Compare Species
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="bg-brand-panel p-6 rounded-none border-2 border-brand-border min-h-[250px]">
+            <h2
+                class="text-2xl font-bold mb-6 text-brand-text uppercase tracking-tight flex justify-between items-center">
+                Console Output
+                <span id="loading-indicator" class="hidden text-sm text-brand-text animate-pulse font-mono">//
+                    Executing...</span>
+            </h2>
+            <div id="result-content"
+                class="bg-brand-bg p-5 rounded-none border border-brand-border font-mono text-sm overflow-x-auto whitespace-pre-wrap text-brand-text leading-relaxed">
+                // System initialized. Awaiting user input.
+                // All data processed via high-performance C++ backend.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const API_BASE = '/api/v1';
+
+        const resultDisplay = document.getElementById('result-content');
+        const loadingIndicator = document.getElementById('loading-indicator');
+
+        function showLoading() {
+            loadingIndicator.classList.remove('hidden');
+            resultDisplay.innerHTML = '<span class="text-brand-subtle">// Querying C++ backend...</span>';
+        }
+
+        function displayResult(data, isError = false, rttMs = 0) {
+            loadingIndicator.classList.add('hidden');
+
+            // Extract and format the backend execution time
+            let algoLatencyLog = 'N/A';
+            if (data.algorithm_latency_ms !== undefined) {
+                // Use 4 decimal places since C++ execution will be extremely fast (often < 0.01 ms)
+                algoLatencyLog = data.algorithm_latency_ms.toFixed(4) + ' ms';
+                // Remove it from the payload so it doesn't print in the JSON viewer
+                delete data.algorithm_latency_ms;
+            }
+
+            const jsonStr = JSON.stringify(data, null, 4);
+
+            // Display both network RTT and pure C++ algorithmic time
+            const timeLog = `\n<span class="text-brand-subtle">// Network RTT: ${rttMs.toFixed(2)} ms | C++ Algo Time: ${algoLatencyLog}</span>\n`;
+
+            if (isError) {
+                resultDisplay.innerHTML = `<span class="font-bold">[ ERROR ]</span>${timeLog}\n${jsonStr}`;
+            } else {
+                resultDisplay.innerHTML = `<span class="font-bold">[ SUCCESS ]</span>${timeLog}\n${jsonStr}`;
+            }
+        }
+
+        // Handle Lineage Submission
+        document.getElementById('lineage-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const taxId = document.getElementById('lineage-id').value;
+            showLoading();
+
+            try {
+                const start = performance.now();
+                const response = await fetch(`${API_BASE}/lineage/${taxId}`);
+                const data = await response.json();
+                const end = performance.now();
+
+                displayResult(data, !response.ok, (end - start));
+            } catch (err) {
+                displayResult({ error: "Network error: Is the server running?" }, true, 0);
+            }
+        });
+
+        // Handle LCA Submission
+        document.getElementById('lca-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id1 = document.getElementById('lca-id1').value;
+            const id2 = document.getElementById('lca-id2').value;
+            const algo = document.querySelector('input[name="algorithm"]:checked').value;
+
+            showLoading();
+
+            try {
+                const start = performance.now();
+                const response = await fetch(`${API_BASE}/lca/${id1}/${id2}?algorithm=${algo}`);
+                const data = await response.json();
+                const end = performance.now();
+
+                displayResult(data, !response.ok, (end - start));
+            } catch (err) {
+                displayResult({ error: "Network error: Is the server running?" }, true, 0);
+            }
+        });
+    </script>
+</body>
+
+</html>
