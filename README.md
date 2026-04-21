@@ -2,14 +2,14 @@
 
 A high-performance, asynchronous C++ Application for querying the NCBI Taxonomy database. Built with the Drogon web framework, OpenLUCA achieves sub-millisecond algorithmic latency and handles tens of thousands of requests per second, making it ideal for rapid taxonomic lineage and Lowest Universal Common Ancestor (LCA) resolution.
 
-## ⚡ Architecture Highlights
+## Architecture Highlights
 
 * **High-Speed Networking:** Built on Drogon's asynchronous, non-blocking event loop. This allows the API to handle tens of thousands of concurrent connections without slowing down.
 * **Flat Memory Architecture:** Instead of using slow, scattered hash maps, the entire NCBI taxonomy tree is flattened into simple 1D arrays. This makes CPU data lookups lightning fast.
 * **Optimized Search Algorithm:** Uses a "Binary Lifting" algorithm to find the Lowest Common Ancestor. Instead of climbing the tree one node at a time `O(H)`, it jumps exponentially `O(log H)` to find answers instantly.
 * **Instant Startup:** The server parses the raw NCBI text files once, then saves the processed structure directly to disk as a binary cache. Subsequent server boots take less than a second.
 
-## 🛠️ Build Instructions
+## Build Instructions
 
 ### Prerequisites
 * C++17 Compiler (GCC/Clang)
@@ -58,7 +58,7 @@ cd build
 
 Navigate to `http://localhost:8080` to view the monochrome web interface. (Note: The initial boot will take a few seconds to compute the binary lifting tables and generate the disk cache. Subsequent boots will be nearly instant).
 
-## 📡 API Endpoints
+## API Endpoints
 
 * `GET /api/v1/lineage/{tax_id}` - Retrieve the taxonomic lineage of a species.
 * `GET /api/v1/lca/{tax_id1}/{tax_id2}?algorithm=[naive|binary_lifting]` - Find the lowest common ancestor of two species.
