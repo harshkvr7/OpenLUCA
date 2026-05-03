@@ -1,6 +1,6 @@
 # OpenLUCA
 
-A high-performance, asynchronous C++ Application for querying the NCBI Taxonomy database. Built with the Drogon web framework, OpenLUCA achieves sub-millisecond algorithmic latency and handles tens of thousands of requests per second, making it ideal for rapid taxonomic lineage and Lowest Universal Common Ancestor (LCA) resolution.
+A high-performance, asynchronous C++ Application for querying the NCBI Taxonomy database. Built with the Drogon web framework, OpenLUCA achieves sub-millisecond algorithmic latency and handles tens of thousands of requests per second, making it ideal for rapid taxonomic lineage and Lowest Common Ancestor (LCA) resolution.
 
 ## Architecture Highlights
 
