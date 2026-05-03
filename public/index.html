@@ -7,19 +7,18 @@
     <title>Taxonomy Explorer [MONOCHROME]</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Configure Tailwind to strictly use BW palette
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         brand: {
                             bg: '#000000',      // Pure Black
-                            panel: '#000000',   // Pure Black panels
-                            text: '#FFFFFF',    // Pure White text
-                            subtle: '#A1A1AA',  // Zinc-400 for labels
+                            panel: '#000000',   // Pure Black 
+                            text: '#FFFFFF',    // Pure White 
+                            subtle: '#A1A1AA',  // Zinc-400 
                             border: '#FFFFFF',  // White borders
                             action: '#FFFFFF',  // White buttons
-                            actionText: '#000000' // Black text on white buttons
+                            actionText: '#000000' // Black text 
                         }
                     }
                 }
@@ -27,7 +26,6 @@
         }
     </script>
     <style>
-        /* Strict monochrome scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -46,7 +44,6 @@
             background: #A1A1AA;
         }
 
-        /* Remove input number spinners for cleaner look */
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -117,7 +114,7 @@
 
                     <button type="submit"
                         class="w-full bg-brand-action hover:bg-brand-subtle text-brand-actionText font-bold text-lg uppercase py-3 px-4 rounded-none transition-colors duration-150">
-                        Compare Species
+                        GET LCA
                     </button>
                 </form>
             </div>
@@ -126,7 +123,7 @@
         <div class="bg-brand-panel p-6 rounded-none border-2 border-brand-border min-h-[250px]">
             <h2
                 class="text-2xl font-bold mb-6 text-brand-text uppercase tracking-tight flex justify-between items-center">
-                Console Output
+                Output
                 <span id="loading-indicator" class="hidden text-sm text-brand-text animate-pulse font-mono">//
                     Executing...</span>
             </h2>

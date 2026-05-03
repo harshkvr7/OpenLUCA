@@ -132,7 +132,7 @@ void TaxonomyManager::saveCache(const std::string& cache_file) const {
 
     out.write(reinterpret_cast<const char*>(&max_nodes), sizeof(int));
     
-    // Blast contiguous memory directly to disk
+    // Store contiguous memory directly to disk
     out.write(reinterpret_cast<const char*>(parent_arr.data()), max_nodes * sizeof(int));
     out.write(reinterpret_cast<const char*>(depth_arr.data()), max_nodes * sizeof(int));
     out.write(reinterpret_cast<const char*>(up_arr.data()), max_nodes * LOG * sizeof(int));

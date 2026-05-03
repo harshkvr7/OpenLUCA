@@ -19,7 +19,7 @@ A high-performance, asynchronous C++ Application for querying the NCBI Taxonomy 
 ### 1. Clone the Repository
 First, bring the source code down to your local machine:
 ```bash
-git clone [https://github.com/yourusername/OpenLUCA.git](https://github.com/yourusername/OpenLUCA.git)
+git clone https://github.com/yourusername/OpenLUCA.git
 cd OpenLUCA
 ```
 
@@ -30,7 +30,7 @@ From within the `OpenLUCA` root directory, download and extract the latest `taxd
 
 ```bash
 mkdir data && cd data
-wget [https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz)
+wget https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
 tar -zxvf taxdump.tar.gz nodes.dmp names.dmp
 rm taxdump.tar.gz
 cd ..

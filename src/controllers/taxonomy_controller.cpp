@@ -10,12 +10,12 @@ void TaxonomyController::getLineage(const drogon::HttpRequestPtr &req,
     
     const auto& manager = TaxonomyManager::getInstance();
 
-    // --- START TIMER ---
+    // --- start timer ---
     auto start = std::chrono::high_resolution_clock::now();
     
     std::vector<int> path = ::getLineage(manager, tax_id);
     
-    // --- STOP TIMER ---
+    // --- stop timer ---
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> algo_time = end - start;
 
@@ -38,7 +38,6 @@ void TaxonomyController::getLineage(const drogon::HttpRequestPtr &req,
         lineage_array.append(node);
     }
 
-    // Inject the exact C++ execution time into the payload
     ret["algorithm_latency_ms"] = algo_time.count();
     ret["tax_id"] = tax_id;
     ret["lineage"] = lineage_array;
@@ -67,7 +66,7 @@ void TaxonomyController::getLca(const drogon::HttpRequestPtr &req,
     std::string algo = req->getParameter("algorithm");
     int lca_id = 1;
 
-    // --- START TIMER ---
+    // --- start timer ---
     auto start = std::chrono::high_resolution_clock::now();
 
     if (algo == "naive") {
@@ -77,13 +76,12 @@ void TaxonomyController::getLca(const drogon::HttpRequestPtr &req,
         algo = "binary_lifting";
     }
 
-    // --- STOP TIMER ---
+    // --- stop timer ---
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> algo_time = end - start;
 
     Json::Value ret;
     
-    // Inject the exact C++ execution time into the payload
     ret["algorithm_latency_ms"] = algo_time.count();
     ret["algorithm_used"] = algo;
     ret["species_1"] = name1;
