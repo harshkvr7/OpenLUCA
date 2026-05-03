@@ -56,7 +56,7 @@ cd build
 ./TaxonomyBackend
 ```
 
-Navigate to `http://localhost:8080` to view the monochrome web interface. (Note: The initial boot will take a few seconds to compute the binary lifting tables and generate the disk cache. Subsequent boots will be nearly instant).
+Navigate to `http://localhost:8080` to view the web interface. (Note: The initial boot will take a few seconds to compute the binary lifting tables and generate the disk cache. Subsequent boots will be nearly instant).
 
 ## API Endpoints
 
